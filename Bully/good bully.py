@@ -24,6 +24,7 @@ class Node:
             if not self.has_coordinator and node.id > self.id:
                 if node.receive_election_message(self):
                     got_response = True
+                    break
 
         # If nobody higher responded, I win
         if not got_response:
