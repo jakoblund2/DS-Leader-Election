@@ -83,6 +83,11 @@
                 <mxCell id="45" value="Become leader" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="540" y="490" width="120" height="60" as="geometry"/>
                 </mxCell>
+                <mxCell id="52" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="47">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="600" y="760" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
                 <mxCell id="47" value="Announce leadership" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="540" y="610" width="120" height="60" as="geometry"/>
                 </mxCell>
