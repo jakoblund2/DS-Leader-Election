@@ -5,14 +5,19 @@ from typing import List, Optional
 
 class Node:
     counter = 0
-    def __init__(self, node_id: int):
+    def __init__(self, node_id: int, largest_id: int):
         self.id = node_id
         self.is_coordinator = False
-        self.has_coordinator = False
+        self.has_announced = False
+        self.has_elected = False
+        self.largest_id = largest_id
         self.cluster: Optional[List["Node"]] = None
 
     def set_cluster(self, nodes: List["Node"]) -> None:
         self.cluster = nodes
+    
+    def get_id(self) -> int:
+        return self.id
 
     def initiate_election(self) -> None:
         print(f"Node {self.id} initiates election.")
@@ -21,15 +26,18 @@ class Node:
         got_response = False
         # Ask all higher-ID nodes
         for node in self.cluster:
-            if not self.has_coordinator and node.id > self.id:
+            if node.id > self.id and not self.has_elected:
                 if node.receive_election_message(self):
                     got_response = True
                     break
+                if node.get_id() == self.largest_id:
+                    self.has_elected = True
 
         # If nobody higher responded, I win
-        if not got_response:
+        if not got_response and not self.has_announced and not self.has_elected:
             self.become_coordinator()
             self.announce_coordinator()
+            self.has_announced = True
         # Else: do nothing; a higher node will continue and eventually announce
 
     def receive_election_message(self, sender: "Node") -> bool:
@@ -55,7 +63,6 @@ class Node:
 
     def set_coordinator(self, coordinator: "Node") -> None:
         print(f"Node {self.id} acknowledges Node {coordinator.id} as coordinator.")
-        self.has_coordinator = True
         Node.counter += 1
         print(f"Counter: {Node.counter}")
 
@@ -71,8 +78,8 @@ class Node:
 
 # --- Demo ---
 if __name__ == "__main__":
-    largest_id = 100
-    nodes = [Node(i) for i in range(1, largest_id + 1)]
+    largest_id = 100  # Assuming IDs are 1 to 5
+    nodes = [Node(i, largest_id) for i in range(1, largest_id + 1)]
     for n in nodes:
         n.set_cluster(nodes)
 
